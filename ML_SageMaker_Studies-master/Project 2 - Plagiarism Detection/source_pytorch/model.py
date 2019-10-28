@@ -7,9 +7,9 @@ import torch.nn as nn
 class BinaryClassifier(nn.Module):
     """
     Define a neural network that performs binary classification.
-    The network should accept your number of features as input, and produce 
+    The network should accept your number of features as input, and produce
     a single sigmoid value, that can be rounded to a label: 0 or 1, as output.
-    
+
     Notes on training:
     To train a binary classifier in PyTorch, use BCELoss.
     BCELoss is binary cross entropy loss, documentation: https://pytorch.org/docs/stable/nn.html#torch.nn.BCELoss
@@ -26,10 +26,19 @@ class BinaryClassifier(nn.Module):
         """
         super(BinaryClassifier, self).__init__()
 
-        # define any initial layers, here
-        
+        # define any linear layer here
+        self.linear1 = nn.Linear(input_features, hidden_dim)
+        self.linear2 = nn.Linear(hidden_dim, output_dim)
+        self.dropout1 = nn.Dropout(0.2)
 
-    
+        # sigmoid layer
+        self.sigmoid_ = nn.Sigmoid()
+        # relu layer
+        self.relu_ = F.relu()
+
+
+
+
     ## TODO: Define the feedforward behavior of the network
     def forward(self, x):
         """
@@ -37,8 +46,10 @@ class BinaryClassifier(nn.Module):
         :param x: A batch of input features of size (batch_size, input_features)
         :return: A single, sigmoid-activated value as output
         """
-        
+
         # define the feedforward behavior
-        
-        return x
-    
+        out = self.linear1(x)
+        out = self.relu_(out)
+        out = self.dropout1(out)
+        out = self.linear2(out)
+        return self.sigmoid_(out)
